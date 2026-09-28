@@ -1,0 +1,70 @@
+seed: 43
+dry_run: false
+validate_only: false
+
+eos:
+  type: metamodel_cse
+  ndat_metamodel: 200
+  nmax_nsat: 25.0
+  nb_CSE: 8
+  crust_name: DH
+
+tov:
+  min_nsat_TOV: 0.75
+  ndat_TOV: 100
+  nb_masses: 100
+  type: gr
+
+prior:
+  specification_file: prior.prior
+
+likelihoods:
+- type: constraints_eos
+  enabled: true
+
+- type: radio
+  enabled: true
+  pulsars:
+    - name: J0740+6620
+      mass_mean: 2.08
+      mass_std: 0.07
+
+- type: gw
+  enabled: true
+  events:
+    - name: GW170817
+      nf_model_dir: "/home/twouters2/projects/48_gwem_nondetections/jester/jesterTOV/inference/flows/models/gw_maf/gw170817/gw170817_xp_nrtv3/"
+  N_masses_evaluation: 2000
+  N_masses_batch_size: 1000
+
+- type: nicer
+  enabled: true
+  pulsars:
+    - name: J0030
+      amsterdam_model_dir: "/home/twouters2/projects/48_gwem_nondetections/jester/jesterTOV/inference/flows/models/nicer_maf/J00300451/amsterdam_pdtu"
+      maryland_model_dir: "/home/twouters2/projects/48_gwem_nondetections/jester/jesterTOV/inference/flows/models/nicer_maf/J00300451/maryland_2spot_rm"
+    - name: J0740
+      amsterdam_model_dir: "/home/twouters2/projects/48_gwem_nondetections/jester/jesterTOV/inference/flows/models/nicer_maf/J07406620/amsterdam_gamma_nicerxmm"
+      maryland_model_dir: "/home/twouters2/projects/48_gwem_nondetections/jester/jesterTOV/inference/flows/models/nicer_maf/J07406620/maryland_unknown_nicerxmm_rm"
+    - name: J0437
+      amsterdam_model_dir: "/home/twouters2/projects/48_gwem_nondetections/jester/jesterTOV/inference/flows/models/nicer_maf/J04374715/amsterdam_cst_pdt/"
+      maryland_model_dir: "/home/twouters2/projects/48_gwem_nondetections/jester/jesterTOV/inference/flows/models/nicer_maf/J04374715/maryland/"
+    - name: J0614
+      maryland_model_dir: "/home/twouters2/projects/48_gwem_nondetections/jester/jesterTOV/inference/flows/models/nicer_maf/J06143329/maryland_3circle/"
+  N_masses_evaluation: 2000
+  N_masses_batch_size: 1000
+
+sampler:
+  type: smc-rw
+  n_particles: 5000
+  n_mcmc_steps: 20
+  target_ess: 0.9
+  random_walk_sigma: 0.05
+  n_eos_samples: 5000
+  output_dir: ./outdir/
+
+postprocessing:
+  enabled: true
+  make_cornerplot: true
+  make_massradius: true
+  make_pressuredensity: true
